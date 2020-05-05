@@ -3,25 +3,23 @@ const app = express();
 const bodyParser  = require('body-parser');
 const port = 3000;
 
-const secure = (res, req, next) => {
-    console.log("In secure");
-    next();
-}
 
 app.use(bodyParser.urlencoded({
     extended: true
   }));
-app.use('/:token', secure);
 
+const secure = (req, res, next) => {
+    const {token} = req.params
+    if (token.length) {
+     res.send('There is a token! And this is what it says: ' + token);
+    return;}
+    else {
+        res.sendStatus(403);}
+ }
 
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
-app.get('/:token', (req, res) => {
-    const {token} = req.params;
-    res.send('Hello token:' + token)
-}
-
-)
+app.get('/:token', secure);
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
