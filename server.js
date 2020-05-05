@@ -3,15 +3,20 @@ const app = express();
 const bodyParser  = require('body-parser');
 const port = 3000;
 
+const secure = (res, req, next) => {
+    console.log("In secure");
+    next();
+}
+
 app.use(bodyParser.urlencoded({
     extended: true
   }));
+app.use('/:token', secure);
 
-const secure = (res, req, next) => {
-    console.log(res.json())
-}
+
 
 app.get('/', (req, res) => res.send('Hello World!'))
+
 app.get('/:token', (req, res) => {
     const {token} = req.params;
     res.send('Hello token:' + token)
