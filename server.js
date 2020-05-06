@@ -4,14 +4,15 @@ const bodyParser  = require('body-parser');
 const port = 3000;
 
 
-const { Pool} = require('pg');
+const { Pool } = require('pg');
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
-  database: 'token_authetication',
+  database: 'token_authentication',
   password: 'jx5kwch6',
   port: 5432,
 });
+
 
 
 app.use(bodyParser.urlencoded({
@@ -30,7 +31,12 @@ const secure = (req, res, next) => {
 
 // root endpoint definition
 app.get('/', (req, res) => { 
-  console.log(pool);
+  pool.query('SELECT * FROM public.user WHERE id = $1', [1], (err, res) => {
+    if (err) {
+      throw err
+    }
+    console.log('user:', res.rows[0])
+  })
   res.send('Hello World! I am a path to /')})
 
 // token endpoint definition
